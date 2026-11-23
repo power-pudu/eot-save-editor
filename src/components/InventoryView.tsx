@@ -123,11 +123,6 @@ const InventoryItemCard = memo(function InventoryItemCard({
                 theme.palette.mode === 'light' ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.08)',
             }}
           />
-          {item.itemId !== 0 && (
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem', fontFamily: 'monospace' }}>
-              #0x{item.itemId.toString(16).toUpperCase()}
-            </Typography>
-          )}
         </Box>
       </Box>
 

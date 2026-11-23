@@ -429,7 +429,6 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
               fallbackBg={meta.bg}
               fallbackColor={meta.text}
               borderColor={`${meta.color}50`}
-              shadow
             />
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -449,7 +448,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
                 />
               </Box>
               <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.2 }}>
-                Default in Chrono Trigger DS: <strong>{defaultLabel}</strong>
+                Default name: <strong>{defaultLabel}</strong>
               </Typography>
             </Box>
           </Box>
