@@ -29,6 +29,7 @@ import {
   getLevelForExp,
   calculateNextExp,
 } from '@/lib/save'
+import { useI18n } from '@/lib/i18n'
 
 interface CharactersViewProps {
   slot: SlotData
@@ -99,6 +100,7 @@ function StatTextField({ label, value, min, max, helperText, onCommit }: StatTex
 }
 
 export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
+  const { t } = useI18n()
   const [selectedCharId, setSelectedCharId] = useState<number>(0)
 
   const activeChar = slot.characters[selectedCharId] || slot.characters[0]
@@ -204,7 +206,11 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
 
     // Show popup on level input informing experience was updated accordingly
     if (levelTimerRef.current) clearTimeout(levelTimerRef.current)
-    setLevelNotification(`Experience updated to ${newExp.toLocaleString()} EXP to match Level ${newLevel}`)
+    setLevelNotification(
+      t.characters.expUpdatedMsg
+        .replace('{exp}', newExp.toLocaleString())
+        .replace('{level}', String(newLevel))
+    )
     levelTimerRef.current = setTimeout(() => {
       setLevelNotification(null)
     }, 3800)
@@ -229,7 +235,11 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
 
       // Show popup on experience input informing level was updated accordingly
       if (expTimerRef.current) clearTimeout(expTimerRef.current)
-      setExpNotification(`Level updated to Lv ${newLevel} to match ${newExp.toLocaleString()} EXP`)
+      setExpNotification(
+        t.characters.levelUpdatedMsg
+          .replace('{level}', String(newLevel))
+          .replace('{exp}', newExp.toLocaleString())
+      )
       expTimerRef.current = setTimeout(() => {
         setExpNotification(null)
       }, 3800)
@@ -264,7 +274,11 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
     setLevelInput('99')
     setExpInput('1743570')
     if (levelTimerRef.current) clearTimeout(levelTimerRef.current)
-    setLevelNotification('Experience updated to 1,743,570 EXP to match Level 99')
+    setLevelNotification(
+      t.characters.expUpdatedMsg
+        .replace('{exp}', '1,743,570')
+        .replace('{level}', '99')
+    )
     levelTimerRef.current = setTimeout(() => {
       setLevelNotification(null)
     }, 3800)
@@ -315,10 +329,10 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           </Box>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Active Party Formation
+              {t.characters.partyFormationTitle}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Choose the 3 characters that appear on the world map and in combat
+              {t.dashboard.activePartySubtitle}
             </Typography>
           </Box>
         </Box>
@@ -326,16 +340,22 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
         <Grid container spacing={2}>
           {[0, 1, 2].map((pSlotIdx) => {
             const currentMemberId = slot.party[pSlotIdx]
+            const slotLabel =
+              pSlotIdx === 0
+                ? t.characters.slot1Leader
+                : pSlotIdx === 1
+                ? t.characters.slot2Member
+                : t.characters.slot3Member
             return (
               <Grid size={{ xs: 12, sm: 4 }} key={pSlotIdx}>
                 <FormControl fullWidth size="small">
                   <InputLabel id={`party-slot-${pSlotIdx}-label`}>
-                    {pSlotIdx === 0 ? '👑 Leader (Slot 1)' : `Party Member ${pSlotIdx + 1}`}
+                    {slotLabel}
                   </InputLabel>
                   <Select
                     labelId={`party-slot-${pSlotIdx}-label`}
                     value={currentMemberId}
-                    label={pSlotIdx === 0 ? '👑 Leader (Slot 1)' : `Party Member ${pSlotIdx + 1}`}
+                    label={slotLabel}
                     onChange={(e) => handlePartySlotChange(pSlotIdx, Number(e.target.value))}
                     sx={{ borderRadius: 2.5 }}
                   >
@@ -462,7 +482,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
               onClick={handleRestoreHpMp}
               sx={{ borderRadius: 2.5 }}
             >
-              Restore HP & MP
+              {t.characters.restoreHpMp}
             </Button>
             <Button
               variant="contained"
@@ -471,7 +491,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
               onClick={handleMaxThisCharacter}
               sx={{ borderRadius: 2.5 }}
             >
-              Max Character
+              {t.characters.maxCharacter}
             </Button>
           </Box>
         </Box>
@@ -481,13 +501,13 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Custom Name */}
           <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
-              label="Character Name (Max 5 chars)"
+              label={t.characters.nameLabel}
               size="small"
               fullWidth
               value={currentCustomName}
               onChange={(e) => handleNameChange(e.target.value)}
               onBlur={handleNameBlur}
-              helperText="Auto-converts to full-width text for DS display"
+              helperText={t.characters.nameHelper}
               slotProps={{ htmlInput: { maxLength: 5 } }}
             />
           </Grid>
@@ -497,7 +517,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
             <Box sx={{ position: 'relative' }}>
               <TextField
                 ref={levelInputRef}
-                label="Level (1 - 99)"
+                label={t.characters.levelLabel}
                 type="number"
                 size="small"
                 fullWidth
@@ -589,7 +609,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
                             fontSize: '0.78rem',
                           }}
                         >
-                          Auto-Updated Experience
+                          {t.characters.autoUpdatedExp}
                         </Typography>
                         <Typography
                           variant="caption"
@@ -616,7 +636,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
             <Box sx={{ position: 'relative' }}>
               <TextField
                 ref={expInputRef}
-                label="Experience (EXP)"
+                label={t.characters.expLabel}
                 type="number"
                 size="small"
                 fullWidth
@@ -640,8 +660,8 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
                 }}
                 helperText={
                   activeChar.level >= 99
-                    ? 'Max Level reached'
-                    : `${activeChar.nextExp.toLocaleString()} EXP until next level`
+                    ? t.characters.maxLevelReached
+                    : `${activeChar.nextExp.toLocaleString()} ${t.characters.expUntilNext}`
                 }
               />
               <Popper
@@ -708,7 +728,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
                             fontSize: '0.78rem',
                           }}
                         >
-                          Auto-Updated Level
+                          {t.characters.autoUpdatedLevel}
                         </Typography>
                         <Typography
                           variant="caption"
@@ -738,7 +758,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
             <Card variant="outlined" sx={{ p: 2.5, borderRadius: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#10B981' }}>
-                  Health Points (HP)
+                  {t.characters.hpTitle}
                 </Typography>
                 <Typography variant="caption" sx={{ fontWeight: 700 }}>
                   {activeChar.curHp} / {activeChar.maxHp}
@@ -757,14 +777,14 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
               />
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <StatTextField
-                  label="Current HP"
+                  label={t.characters.currentHp}
                   value={activeChar.curHp}
                   min={0}
                   max={999}
                   onCommit={(val) => patchCharacter({ curHp: val })}
                 />
                 <StatTextField
-                  label="Max HP"
+                  label={t.characters.maxHp}
                   value={activeChar.maxHp}
                   min={1}
                   max={999}
@@ -779,7 +799,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
             <Card variant="outlined" sx={{ p: 2.5, borderRadius: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#3B82F6' }}>
-                  Magic Points (MP)
+                  {t.characters.mpTitle}
                 </Typography>
                 <Typography variant="caption" sx={{ fontWeight: 700 }}>
                   {activeChar.curMp} / {activeChar.maxMp}
@@ -798,14 +818,14 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
               />
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <StatTextField
-                  label="Current MP"
+                  label={t.characters.currentMp}
                   value={activeChar.curMp}
                   min={0}
                   max={99}
                   onCommit={(val) => patchCharacter({ curMp: val })}
                 />
                 <StatTextField
-                  label="Max MP"
+                  label={t.characters.maxMp}
                   value={activeChar.maxMp}
                   min={1}
                   max={99}
@@ -818,14 +838,14 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
 
         {/* Core Attributes */}
         <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 2 }}>
-          Battle Attributes & Stats
+          {t.characters.battleAttributes}
         </Typography>
 
         <Grid container spacing={2}>
           {/* Power */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Power"
+              label={t.characters.power}
               value={activeChar.power}
               min={1}
               max={99}
@@ -837,7 +857,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Stamina */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Stamina"
+              label={t.characters.stamina}
               value={activeChar.stamina}
               min={1}
               max={99}
@@ -849,7 +869,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Speed */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Speed"
+              label={t.characters.speed}
               value={activeChar.speed}
               min={1}
               max={16}
@@ -861,7 +881,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Magic */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Magic"
+              label={t.characters.magic}
               value={activeChar.magic}
               min={1}
               max={99}
@@ -873,7 +893,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Hit */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Hit"
+              label={t.characters.hit}
               value={activeChar.hit}
               min={1}
               max={99}
@@ -885,7 +905,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Evade */}
           <Grid size={{ xs: 6, sm: 3, md: 1.71 }}>
             <StatTextField
-              label="Evade"
+              label={t.characters.evade}
               value={activeChar.evade}
               min={1}
               max={99}
@@ -897,7 +917,7 @@ export function CharactersView({ slot, onPatchSlot }: CharactersViewProps) {
           {/* Magic Defense */}
           <Grid size={{ xs: 6, sm: 3, md: 1.74 }}>
             <StatTextField
-              label="Magic Def"
+              label={t.characters.magicDef}
               value={activeChar.magicDefense}
               min={1}
               max={99}

@@ -5,6 +5,7 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded'
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
+import { useI18n } from '@/lib/i18n'
 
 interface FileDropzoneProps {
   onFile: (file: File) => void
@@ -12,6 +13,7 @@ interface FileDropzoneProps {
 }
 
 export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
+  const { t } = useI18n()
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -85,7 +87,7 @@ export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
 
       {/* Title */}
       <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, letterSpacing: '-0.02em' }}>
-        Drop your Chrono Trigger save file here
+        {t.landing.dropzoneTitle}
       </Typography>
 
       <Typography
@@ -97,8 +99,8 @@ export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
           lineHeight: 1.6,
         }}
       >
-        Compatible with Nintendo DS battery saves (<Box component="code" sx={{ fontWeight: 700 }}>.sav</Box>), emulator saves (<Box component="code" sx={{ fontWeight: 700 }}>.dsv</Box>), and Action Replay DS saves (<Box component="code" sx={{ fontWeight: 700 }}>.dst</Box>, <Box component="code" sx={{ fontWeight: 700 }}>.duc</Box>).
-		<br/>Nothing is uploaded anywhere, so be sure to download your modifications.
+        {t.landing.supportedFormats}
+		<br/>{t.landing.dropzoneSubtitle}
       </Typography>
 
       {/* Backup Caution */}
@@ -120,7 +122,7 @@ export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
         }}
       >
         <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
-          ⚠️ <strong>Always</strong> backup your original save before editing. I'm is not responsible for corrupted files.
+          ⚠️ {t.footer.backupWarning}
         </Typography>
       </Box>
 
@@ -136,7 +138,7 @@ export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
           }}
           sx={{ px: 3.5, py: 1.2, borderRadius: 3 }}
         >
-          Choose Save File
+          {t.landing.selectFileButton}
         </Button>
 
         <Button
@@ -149,7 +151,7 @@ export function FileDropzone({ onFile, onDemo }: FileDropzoneProps) {
           }}
           sx={{ px: 3, py: 1.2, borderRadius: 3 }}
         >
-          Try Demo Save
+          {t.landing.loadDemoButton}
         </Button>
       </Box>
 

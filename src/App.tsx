@@ -13,6 +13,7 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CircularProgress from '@mui/material/CircularProgress'
+import Tooltip from '@mui/material/Tooltip'
 import MenuIcon from '@mui/icons-material/Menu'
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded'
 import RestartAltRoundedIcon from '@mui/icons-material/RestartAltRounded'
@@ -28,6 +29,8 @@ import { FileDropzone } from '@/components/FileDropzone'
 import { SlotSelectDialog } from '@/components/SlotSelectDialog'
 import { DashboardView } from '@/components/DashboardView'
 import { LegalFooter } from '@/components/LegalFooter'
+import { LanguageSelector } from '@/components/LanguageSelector'
+import { useI18n } from '@/lib/i18n'
 
 const CharactersView = lazy(() =>
   import('@/components/CharactersView').then((m) => ({ default: m.CharactersView })),
@@ -96,6 +99,7 @@ import type {
 } from '@/lib/save'
 
 export default function App() {
+  const { t } = useI18n()
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('light')
   const [loaded, setLoaded] = useState<LoadedSaveFile | null>(null)
   const [data, setData] = useState<SaveData | null>(null)
@@ -300,9 +304,9 @@ export default function App() {
                 )}
               </Box>
 
-              {/* Right Side: Actions & Theme Toggle */}
+              {/* Right Side: Actions, Language & Theme Toggle */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-                {loaded ? (
+                {loaded && (
                   <>
                     <Chip
                       label={loaded.fileName}
@@ -322,7 +326,7 @@ export default function App() {
                       onClick={handleReset}
                       sx={{ borderRadius: 2.5 }}
                     >
-                      Reset
+                      {t.topBar.reset}
                     </Button>
 
                     <Button
@@ -333,10 +337,15 @@ export default function App() {
                       disabled={!editedBytes}
                       sx={{ borderRadius: 2.5, px: 2 }}
                     >
-                      Download Save
+                      {t.topBar.downloadSave}
                     </Button>
                   </>
-                ) : (
+                )}
+
+                {/* Language Selector beside Theme Toggle */}
+                <LanguageSelector compact />
+
+                <Tooltip title={themeMode === 'light' ? t.topBar.darkMode : t.topBar.lightMode}>
                   <IconButton
                     size="small"
                     onClick={toggleThemeMode}
@@ -348,7 +357,7 @@ export default function App() {
                       <LightModeRoundedIcon sx={{ fontSize: 18, color: '#FBBF24' }} />
                     )}
                   </IconButton>
-                )}
+                </Tooltip>
               </Box>
             </Toolbar>
           </AppBar>
@@ -386,10 +395,10 @@ export default function App() {
                         <FileUploadRoundedIcon />
                       </Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 0.5 }}>
-                        1 · Select Save & Slot
+                        {t.landing.step1Title}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.84rem', lineHeight: 1.5 }}>
-                        Supports 64 KB battery saves (.sav) and DeSmuME (.dsv). Pick from any of the 3 built-in game slots.
+                        {t.landing.step1Desc}
                       </Typography>
                     </Card>
                   </Grid>
@@ -412,10 +421,10 @@ export default function App() {
                         <EditRoundedIcon />
                       </Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 0.5 }}>
-                        2 · Customize & Boost
+                        {t.landing.step2Title}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.84rem', lineHeight: 1.5 }}>
-                        Use instant boosts for Max Gold, Items x99, Max Characters, or fine-tune character names and 347 items.
+                        {t.landing.step2Desc}
                       </Typography>
                     </Card>
                   </Grid>
@@ -438,10 +447,10 @@ export default function App() {
                         <CheckCircleOutlineRoundedIcon />
                       </Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 0.5 }}>
-                        3 · Safe Checksum Export
+                        {t.landing.step3Title}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.84rem', lineHeight: 1.5 }}>
-                        32-bit slot checksums are automatically calculated on download so your game boots with zero corruption.
+                        {t.landing.step3Desc}
                       </Typography>
                     </Card>
                   </Grid>

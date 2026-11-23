@@ -27,6 +27,7 @@ import DiamondRoundedIcon from '@mui/icons-material/DiamondRounded'
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded'
 import type { SlotData, InventoryItem } from '@/lib/save'
 import { ITEM_CATEGORIES, ITEM_NAMES, type ItemCategory, type ItemCategoryId } from '@/lib/save'
+import { useI18n } from '@/lib/i18n'
 
 interface InventoryViewProps {
   slot: SlotData
@@ -209,6 +210,7 @@ const InventoryItemCard = memo(function InventoryItemCard({
 })
 
 export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
+  const { t } = useI18n()
   // Default to consumable for lightning-fast initial load
   const [activeCatId, setActiveCatId] = useState<string>('consumable')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -306,6 +308,27 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
     setPage(1)
   }
 
+  const getCategoryLabel = (catId: string) => {
+    switch (catId) {
+      case 'consumable':
+        return t.inventory.catConsumables
+      case 'weapon':
+        return t.inventory.catWeapons
+      case 'armor':
+        return t.inventory.catArmor
+      case 'helmet':
+        return t.inventory.catHelmets
+      case 'accessory':
+        return t.inventory.catAccessories
+      case 'important':
+        return t.inventory.catKeyItems
+      case 'all':
+        return t.inventory.catAll
+      default:
+        return catId
+    }
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {/* Category Tabs & Header */}
@@ -313,10 +336,10 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, mb: 2 }}>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Inventory Management
+              {t.inventory.title}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Search and modify items, equipment, and consumables across all categories
+              {t.inventory.subtitle}
             </Typography>
           </Box>
 
@@ -340,7 +363,7 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
                 onClick={() => handleBulkSetCategory(activeCatId as ItemCategoryId, 0)}
                 sx={{ borderRadius: 2.5 }}
               >
-                Clear Category
+                {t.inventory.clear}
               </Button>
             </Box>
           )}
@@ -370,19 +393,19 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
             <Tab
               key={cat.id}
               value={cat.id}
-              label={`${cat.label} (${cat.slotCount})`}
+              label={`${getCategoryLabel(cat.id)} (${cat.slotCount})`}
               icon={CATEGORY_ICONS[cat.id]}
               iconPosition="start"
             />
           ))}
-          <Tab value="all" label="All (347)" />
+          <Tab value="all" label={`${getCategoryLabel('all')} (347)`} />
         </Tabs>
 
         {/* Search & Filters Controls */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, mt: 2.5 }}>
           <TextField
             size="small"
-            placeholder="Search items (e.g. Rainbow, Potion, Tab)..."
+            placeholder={t.inventory.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value)
@@ -427,7 +450,7 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
               }
               label={
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  Show Owned Only (&gt; 0)
+                  {t.inventory.showOwnedOnly}
                 </Typography>
               }
             />
@@ -445,10 +468,10 @@ export function InventoryView({ slot, onPatchSlot }: InventoryViewProps) {
       {filteredItems.length === 0 ? (
         <Card sx={{ p: 6, textAlign: 'center', borderRadius: 4 }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5 }}>
-            No items match your filter
+            {t.inventory.noItemsFound}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Try clearing your search query or enabling unowned items.
+            {t.inventory.clearFilters}
           </Typography>
         </Card>
       ) : (

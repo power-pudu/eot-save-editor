@@ -12,6 +12,7 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import type { SlotData } from '@/lib/save'
+import { useI18n } from '@/lib/i18n'
 
 interface MiscViewProps {
   slot: SlotData
@@ -19,6 +20,7 @@ interface MiscViewProps {
 }
 
 export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
+  const { t } = useI18n()
   const hours = Math.floor(slot.playtimeSeconds / 3600)
   const minutes = Math.floor((slot.playtimeSeconds % 3600) / 60)
 
@@ -49,10 +51,10 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
             </Box>
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                Millennial Fair & Mini-Games
+                {t.misc.fairTitle}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Norstein Bekkler's tent tickets, silver points, and cat breeding food
+                {t.misc.fairSubtitle}
               </Typography>
             </Box>
           </Box>
@@ -64,7 +66,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
             onClick={() => onPatchSlot({ silverPoints: 255, catFood: 255 })}
             sx={{ borderRadius: 2.5 }}
           >
-            Max Fair & Food (255)
+            {t.misc.maxFairAndFood}
           </Button>
         </Box>
 
@@ -75,14 +77,14 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
                 <AttractionsRoundedIcon sx={{ color: '#A855F7', fontSize: 20 }} />
                 <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                  Silver Points (Bekkler's Tent)
+                  {t.misc.silverPointsTitle}
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2, fontSize: '0.82rem' }}>
-                Used to play mini-games at the Millennial Fair and win the Crono Poyozo doll.
+                {t.misc.silverPointsDesc}
               </Typography>
               <TextField
-                label="Points (0 - 255)"
+                label={t.misc.silverPointsLabel}
                 type="number"
                 size="small"
                 fullWidth
@@ -107,14 +109,14 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
                 <PetsRoundedIcon sx={{ color: '#EC4899', fontSize: 20 }} />
                 <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                  Cat Food (Pounds)
+                  {t.misc.catFoodTitle}
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2, fontSize: '0.82rem' }}>
-                Attracts more cats to Crono's house in Truce when food supplies are high.
+                {t.misc.catFoodDesc}
               </Typography>
               <TextField
-                label="Cat Food (0 - 255)"
+                label={t.misc.catFoodLabel}
                 type="number"
                 size="small"
                 fullWidth
@@ -154,10 +156,10 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           </Box>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Epoch & Story Entities
+              {t.misc.storyEntitiesTitle}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Names for the Wings of Time time machine and royal identity
+              {t.misc.storyEntitiesSubtitle}
             </Typography>
           </Box>
         </Box>
@@ -166,7 +168,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           {/* Epoch Airship Name */}
           <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
-              label="Time Machine (Epoch) Name"
+              label={t.misc.epochLabel}
               size="small"
               fullWidth
               value={slot.airshipName}
@@ -179,7 +181,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
                   onPatchSlot({ airshipName: trimmed })
                 }
               }}
-              helperText="Default: 'Epoch' (Wings of Time). Max 5 characters."
+              helperText={t.misc.epochDesc}
               slotProps={{ htmlInput: { maxLength: 5 } }}
             />
           </Grid>
@@ -187,7 +189,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           {/* Princess Nadia Name */}
           <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
-              label="Princess Nadia (Marle's Royal Name)"
+              label={t.misc.nadiaLabel}
               size="small"
               fullWidth
               value={slot.nadiaName}
@@ -200,7 +202,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
                   onPatchSlot({ nadiaName: trimmed })
                 }
               }}
-              helperText="Default: 'Nadia'. Max 5 characters."
+              helperText={t.misc.nadiaDesc}
               slotProps={{ htmlInput: { maxLength: 5 } }}
             />
           </Grid>
@@ -226,10 +228,10 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           </Box>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Play Time & Save Counter
+              {t.misc.timeAndSaveTitle}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Adjust recorded adventure elapsed time and save frequency
+              {t.misc.timeAndSaveSubtitle}
             </Typography>
           </Box>
         </Box>
@@ -238,7 +240,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           {/* Hours */}
           <Grid size={{ xs: 6, sm: 4 }}>
             <TextField
-              label="Hours"
+              label={t.misc.playtimeHours}
               type="number"
               size="small"
               fullWidth
@@ -251,7 +253,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           {/* Minutes */}
           <Grid size={{ xs: 6, sm: 4 }}>
             <TextField
-              label="Minutes"
+              label={t.misc.playtimeMinutes}
               type="number"
               size="small"
               fullWidth
@@ -264,7 +266,7 @@ export function MiscView({ slot, onPatchSlot }: MiscViewProps) {
           {/* Save Counter */}
           <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
-              label="Save Count"
+              label={t.misc.saveCountLabel}
               type="number"
               size="small"
               fullWidth

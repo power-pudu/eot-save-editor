@@ -15,6 +15,8 @@ import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded'
 import AttractionsRoundedIcon from '@mui/icons-material/AttractionsRounded'
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded'
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded'
+import { LanguageSelector } from './LanguageSelector'
+import { useI18n } from '@/lib/i18n'
 
 export type NavTab = 'dashboard' | 'characters' | 'inventory' | 'misc'
 
@@ -27,38 +29,6 @@ interface SidebarProps {
 	onToggleMode: () => void
 }
 
-const NAV_ITEMS: Array<{
-	id: NavTab
-	label: string
-	sublabel: string
-	icon: React.ReactNode
-}> = [
-		{
-			id: 'dashboard',
-			label: 'Dashboard & Boosts',
-			sublabel: 'Overview & Cheats',
-			icon: <DashboardRoundedIcon sx={{ fontSize: 22 }} />,
-		},
-		{
-			id: 'characters',
-			label: 'Party & Characters',
-			sublabel: 'Stats, Names, Team',
-			icon: <GroupRoundedIcon sx={{ fontSize: 22 }} />,
-		},
-		{
-			id: 'inventory',
-			label: 'Inventory & Items',
-			sublabel: '347 Items & Equipment',
-			icon: <Inventory2RoundedIcon sx={{ fontSize: 22 }} />,
-		},
-		{
-			id: 'misc',
-			label: 'Mini-Games & Epoch',
-			sublabel: 'Fair, Food, Airship',
-			icon: <AttractionsRoundedIcon sx={{ fontSize: 22 }} />,
-		},
-	]
-
 export const DRAWER_WIDTH = 270
 
 export function Sidebar({
@@ -69,6 +39,40 @@ export function Sidebar({
 	mode,
 	onToggleMode,
 }: SidebarProps) {
+	const { t } = useI18n()
+
+	const navItems: Array<{
+		id: NavTab
+		label: string
+		sublabel: string
+		icon: React.ReactNode
+	}> = [
+		{
+			id: 'dashboard',
+			label: t.nav.dashboard,
+			sublabel: t.dashboard.quickBoostsTitle,
+			icon: <DashboardRoundedIcon sx={{ fontSize: 22 }} />,
+		},
+		{
+			id: 'characters',
+			label: t.nav.characters,
+			sublabel: t.characters.battleAttributes,
+			icon: <GroupRoundedIcon sx={{ fontSize: 22 }} />,
+		},
+		{
+			id: 'inventory',
+			label: t.nav.inventory,
+			sublabel: t.inventory.catAll,
+			icon: <Inventory2RoundedIcon sx={{ fontSize: 22 }} />,
+		},
+		{
+			id: 'misc',
+			label: t.nav.misc,
+			sublabel: t.misc.fairTitle,
+			icon: <AttractionsRoundedIcon sx={{ fontSize: 22 }} />,
+		},
+	]
+
 	const content = (
 		<Box
 			sx={{
@@ -103,7 +107,7 @@ export function Sidebar({
 							letterSpacing: '-0.02em',
 						}}
 					>
-						Egg of Time
+						{t.nav.appTitle}
 					</Typography>
 					<Typography
 						variant="caption"
@@ -115,7 +119,7 @@ export function Sidebar({
 							fontSize: '0.68rem',
 						}}
 					>
-						Save Editor
+						{t.nav.appSubtitle}
 					</Typography>
 				</Box>
 			</Box>
@@ -135,10 +139,10 @@ export function Sidebar({
 						mb: 1,
 					}}
 				>
-					Navigation
+					{t.topBar.selectSlot}
 				</Typography>
 				<List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.8 }}>
-					{NAV_ITEMS.map((item) => {
+					{navItems.map((item) => {
 						const isSelected = activeTab === item.id
 						return (
 							<ListItem key={item.id} disablePadding>
@@ -189,7 +193,7 @@ export function Sidebar({
 				</List>
 			</Box>
 
-			{/* Brand Footer: Power Pudu */}
+			{/* Brand Footer: Power Pudu & Controls */}
 			<Box
 				sx={{
 					p: 2,
@@ -220,7 +224,7 @@ export function Sidebar({
 						/>
 						<Box>
 							<Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
-								Another project from
+								{t.nav.anotherProjectFrom}
 							</Typography>
 							<Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.15 }}>
 								Power Pudu
@@ -228,28 +232,32 @@ export function Sidebar({
 						</Box>
 					</Box>
 
-					<Tooltip title={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}>
-						<IconButton
-							size="small"
-							onClick={onToggleMode}
-							sx={{
-								bgcolor: (theme) =>
-									theme.palette.mode === 'light' ? '#FFFFFF' : 'rgba(255,255,255,0.08)',
-								border: '1px solid',
-								borderColor: 'divider',
-							}}
-						>
-							{mode === 'light' ? (
-								<DarkModeRoundedIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-							) : (
-								<LightModeRoundedIcon sx={{ fontSize: 18, color: '#FBBF24' }} />
-							)}
-						</IconButton>
-					</Tooltip>
+					{/* Theme & Language Controls beside each other */}
+					<Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+						<LanguageSelector compact />
+						<Tooltip title={mode === 'light' ? t.topBar.darkMode : t.topBar.lightMode}>
+							<IconButton
+								size="small"
+								onClick={onToggleMode}
+								sx={{
+									bgcolor: (theme) =>
+										theme.palette.mode === 'light' ? '#FFFFFF' : 'rgba(255,255,255,0.08)',
+									border: '1px solid',
+									borderColor: 'divider',
+								}}
+							>
+								{mode === 'light' ? (
+									<DarkModeRoundedIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+								) : (
+									<LightModeRoundedIcon sx={{ fontSize: 18, color: '#FBBF24' }} />
+								)}
+							</IconButton>
+						</Tooltip>
+					</Box>
 				</Box>
 
 				<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pt: 0.5 }}>
-					<Chip label="v0.3" size="small" sx={{ height: 20, fontSize: '0.68rem', fontWeight: 700 }} />
+					<Chip label={t.nav.version} size="small" sx={{ height: 20, fontSize: '0.68rem', fontWeight: 700 }} />
 				</Box>
 			</Box>
 		</Box>

@@ -25,6 +25,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
 import { CharacterPortrait } from './CharacterPortrait'
 import type { SlotData } from '@/lib/save'
 import { CHARACTER_LABELS } from '@/lib/save'
+import { useI18n } from '@/lib/i18n'
 
 interface DashboardViewProps {
   slot: SlotData
@@ -43,12 +44,13 @@ const ELEMENT_COLORS: Record<string, { bg: string; text: string; label: string }
 }
 
 export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardViewProps) {
+  const { t } = useI18n()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   // Boost 1: Max Gold
   const handleMaxGold = () => {
     onPatchSlot({ money: 9_999_999 })
-    setToastMessage('Max Gold applied! (9,999,999 G)')
+    setToastMessage(t.dashboard.toastMaxGold)
   }
 
   // Boost 2: Max Consumables x99
@@ -64,7 +66,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
         consumable: consumables,
       },
     })
-    setToastMessage('All consumable items set to x99!')
+    setToastMessage(t.dashboard.toastMaxConsumables)
   }
 
   // Boost 3: Max All 7 Characters
@@ -87,7 +89,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
       nextExp: 0, // EXP countdown is 0 at max level
     }))
     onPatchSlot({ characters: upgraded })
-    setToastMessage('All 7 characters maxed to Level 99 & 99 stats!')
+    setToastMessage(t.dashboard.toastMaxHeroes)
   }
 
   // Boost 4: Max Mini-Games (Silver Points & Cat Food)
@@ -96,7 +98,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
       silverPoints: 255,
       catFood: 255,
     })
-    setToastMessage('Silver Points and Cat Food set to 255 (max)!')
+    setToastMessage(t.dashboard.toastMaxMiniGames)
   }
 
   // Boost 5: Unlock 1 of each equipment
@@ -112,7 +114,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
       }))
     }
     onPatchSlot({ inventory: newInventory })
-    setToastMessage('All Weapons, Armor, Helmets & Accessories unlocked (x1)!')
+    setToastMessage(t.dashboard.toastUnlockGear)
   }
 
   const hours = Math.floor(slot.playtimeSeconds / 3600)
@@ -164,10 +166,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <BoltRoundedIcon sx={{ fontSize: 18, color: 'primary.main' }} />
             <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: '0.85rem' }}>
-              Quick Boosts & Cheats
+              {t.dashboard.quickBoostsTitle}
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary', display: { xs: 'none', sm: 'inline' } }}>
-              · Optional progression shortcuts
+              · {t.dashboard.quickBoostsSubtitle}
             </Typography>
           </Box>
           <Chip
@@ -204,10 +206,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               >
                 <Box>
                   <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>
-                    Max Gold
+                    {t.dashboard.maxGold}
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem' }}>
-                    9,999,999 G
+                    {t.dashboard.maxGoldDesc}
                   </Typography>
                 </Box>
               </Button>
@@ -231,10 +233,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               >
                 <Box>
                   <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>
-                    Max Items x99
+                    {t.dashboard.maxConsumables}
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem' }}>
-                    All Consumables
+                    {t.dashboard.maxConsumablesDesc}
                   </Typography>
                 </Box>
               </Button>
@@ -258,10 +260,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               >
                 <Box>
                   <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>
-                    Max all Characters
+                    {t.dashboard.maxAllHeroes}
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem' }}>
-                    Lv 99 & 99 Stats
+                    {t.dashboard.maxAllHeroesDesc}
                   </Typography>
                 </Box>
               </Button>
@@ -285,10 +287,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               >
                 <Box>
                   <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>
-                    Max Fair & Food
+                    {t.dashboard.maxMiniGames}
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem' }}>
-                    255 Pts & Cat Food
+                    {t.dashboard.maxMiniGamesDesc}
                   </Typography>
                 </Box>
               </Button>
@@ -312,10 +314,10 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               >
                 <Box>
                   <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>
-                    Unlock Gear
+                    {t.dashboard.unlockAllGear}
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem' }}>
-                    Weapons & Armor x1
+                    {t.dashboard.unlockAllGearDesc}
                   </Typography>
                 </Box>
               </Button>
@@ -336,7 +338,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
               theme.palette.mode === 'light' ? 'rgba(59, 130, 246, 0.04)' : 'rgba(59, 130, 246, 0.1)',
           }}
         >
-          <strong>Slot {slot.index + 1} is currently unused on this cartridge.</strong> Modifying any values or applying quick boosts will initialize this slot for your game.
+          <strong>{t.slotDialog.slot} {slot.index + 1}</strong> {t.dashboard.uninitializedNotice}
         </Alert>
       )}
 
@@ -347,7 +349,7 @@ export function DashboardView({ slot, onPatchSlot, onNavigateTab }: DashboardVie
           <Card sx={{ height: '100%', p: 2.5, display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                Gold (G)
+                {t.dashboard.goldTitle}
               </Typography>
               <Box
                 sx={{

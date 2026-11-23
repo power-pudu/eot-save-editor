@@ -9,8 +9,10 @@ import DialogActions from '@mui/material/DialogActions'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
 import GavelRoundedIcon from '@mui/icons-material/GavelRounded'
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined'
+import { useI18n } from '@/lib/i18n'
 
 export function LegalFooter() {
+  const { t } = useI18n()
   const [openModal, setOpenModal] = useState(false)
 
   return (
@@ -50,14 +52,14 @@ export function LegalFooter() {
       >
         <WarningAmberRoundedIcon sx={{ fontSize: 18, flexShrink: 0 }} />
         <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
-          <strong>Always</strong> Always create a backup copy of your original save file. I'm is not responsible for lost data or corrupted saves.
+          {t.footer.backupWarning}
         </Typography>
       </Box>
 
       {/* Legal & Trademark Text */}
       <Box sx={{ maxWidth: 760, px: 2 }}>
         <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.73rem', lineHeight: 1.5, display: 'block' }}>
-          Chrono Trigger is a registered trademark of Square Enix Co., Ltd. Egg of Time is an unofficial, non-commercial fan project by <strong>Power Pudu</strong> and is not affiliated with, endorsed, or sponsored by Square Enix. No ROMs or copyrighted game files are hosted here.
+          {t.footer.trademark}
         </Typography>
       </Box>
 
@@ -76,7 +78,7 @@ export function LegalFooter() {
           '&:hover': { color: 'text.primary' },
         }}
       >
-        View Full Legal Disclaimer & Limitation of Liability
+        {t.footer.legalModalTitle}
       </Button>
 
       {/* Full Legal Policy Dialog */}
@@ -94,7 +96,7 @@ export function LegalFooter() {
         <DialogTitle sx={{ pt: 3, pb: 1, px: 3, display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <ShieldOutlinedIcon sx={{ color: 'primary.main', fontSize: 24 }} />
           <Typography variant="h6" sx={{ fontWeight: 800 }}>
-            Legal Disclaimer & Terms of Use
+            {t.footer.legalModalTitle}
           </Typography>
         </DialogTitle>
 
@@ -146,7 +148,7 @@ export function LegalFooter() {
             onClick={() => setOpenModal(false)}
             sx={{ borderRadius: 2.5, px: 3 }}
           >
-            I Understand
+            {t.footer.close}
           </Button>
         </DialogActions>
       </Dialog>

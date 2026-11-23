@@ -17,6 +17,7 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import { CharacterPortrait } from './CharacterPortrait'
 import type { SlotData } from '@/lib/save'
 import { CHARACTER_LABELS } from '@/lib/save'
+import { useI18n } from '@/lib/i18n'
 
 interface SlotSelectDialogProps {
   open: boolean
@@ -45,6 +46,8 @@ export function SlotSelectDialog({
   onClose,
   canDismiss = true,
 }: SlotSelectDialogProps) {
+  const { t } = useI18n()
+
   return (
     <Dialog
       open={open}
@@ -59,10 +62,10 @@ export function SlotSelectDialog({
     >
       <DialogTitle sx={{ pt: 3.5, pb: 1, px: 3.5, textAlign: 'center' }}>
         <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>
-          Choose a Save Slot
+          {t.slotDialog.title}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Select the slot you want to edit:
+          {t.slotDialog.subtitle}
         </Typography>
       </DialogTitle>
 
@@ -115,7 +118,7 @@ export function SlotSelectDialog({
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Chip
-                          label={`Slot ${idx + 1}`}
+                          label={`${t.slotDialog.slot} ${idx + 1}`}
                           size="small"
                           color={isSelected ? 'primary' : 'default'}
                           variant={isSelected ? 'filled' : 'outlined'}
@@ -123,7 +126,7 @@ export function SlotSelectDialog({
                         />
                         {!slot.isInitialized && (
                           <Chip
-                            label="Empty"
+                            label={t.slotDialog.empty}
                             size="small"
                             variant="outlined"
                             sx={{
@@ -140,7 +143,7 @@ export function SlotSelectDialog({
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'primary.main' }}>
                           <CheckCircleRoundedIcon sx={{ fontSize: 18 }} />
                           <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                            Active
+                            {t.slotDialog.active}
                           </Typography>
                         </Box>
                       )}
@@ -164,7 +167,7 @@ export function SlotSelectDialog({
                             {leaderName}
                           </Typography>
                           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                            Party Leader
+                            {t.slotDialog.partyLeader}
                           </Typography>
                         </Box>
                       </Box>
@@ -189,10 +192,10 @@ export function SlotSelectDialog({
                         </Box>
                         <Box>
                           <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.2, color: 'text.secondary' }}>
-                            No Save Data
+                            {t.slotDialog.noSaveData}
                           </Typography>
                           <Typography variant="caption" sx={{ color: 'text.secondary', opacity: 0.7 }}>
-                            Unused Slot
+                            {t.slotDialog.unusedSlot}
                           </Typography>
                         </Box>
                       </Box>
@@ -203,7 +206,7 @@ export function SlotSelectDialog({
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
                           <MonetizationOnRoundedIcon sx={{ fontSize: 18, color: slot.isInitialized ? '#F59E0B' : 'text.disabled' }} />
-                          <Typography variant="body2">Gold</Typography>
+                          <Typography variant="body2">{t.slotDialog.gold}</Typography>
                         </Box>
                         <Typography
                           variant="body2"
@@ -220,7 +223,7 @@ export function SlotSelectDialog({
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
                           <AccessTimeRoundedIcon sx={{ fontSize: 18, color: slot.isInitialized ? '#3B82F6' : 'text.disabled' }} />
-                          <Typography variant="body2">Playtime</Typography>
+                          <Typography variant="body2">{t.slotDialog.playtime}</Typography>
                         </Box>
                         <Typography
                           variant="body2"
@@ -236,7 +239,7 @@ export function SlotSelectDialog({
                       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
                           <GroupRoundedIcon sx={{ fontSize: 18, color: slot.isInitialized ? '#10B981' : 'text.disabled' }} />
-                          <Typography variant="body2">Party</Typography>
+                          <Typography variant="body2">{t.slotDialog.party}</Typography>
                         </Box>
                         {slot.isInitialized ? (
                           <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: '65%' }}>
@@ -256,7 +259,7 @@ export function SlotSelectDialog({
                           </Box>
                         ) : (
                           <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: '0.85rem' }}>
-                            Empty
+                            {t.slotDialog.empty}
                           </Typography>
                         )}
                       </Box>
@@ -274,7 +277,7 @@ export function SlotSelectDialog({
                         }}
                         sx={{ borderRadius: 2.5 }}
                       >
-                        {isSelected ? 'Editing Slot' : `Select Slot ${idx + 1}`}
+                        {isSelected ? t.slotDialog.editingSlot : `${t.slotDialog.selectSlot} ${idx + 1}`}
                       </Button>
                     </Box>
                   </CardContent>
