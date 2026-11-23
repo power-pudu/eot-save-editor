@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta
+      name="description"
+      content="A modern, client-side save editor for Chrono Trigger on Nintendo DS (.sav, .dsv, .dst, .duc)."
+    />
+    <title>Egg of Time - Save Editor | Power Pudu</title>
+    <link rel="icon" type="image/png" href="/assets/eot-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        accent-color: #4f46e5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          accent-color: #818cf8;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation-duration: 0.2s;
+          animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        ::view-transition-old(main-view),
+        ::view-transition-new(main-view) {
+          animation-duration: 0.18s;
+          animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-group(*),
+        ::view-transition-old(*),
+        ::view-transition-new(*) {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

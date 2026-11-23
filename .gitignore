@@ -1,0 +1,14 @@
+node_modules
+dist
+*.local
+.DS_Store
+.vite
+__pycache__/
+*.pyc
+CT.sav
+sample.dst
+sample.duc
+*.sav
+*.dsv
+*.dst
+*.duc
