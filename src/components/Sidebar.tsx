@@ -223,7 +223,7 @@ export function Sidebar({
 							}}
 						/>
 						<Box>
-							<Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.7rem' }}>
+							<Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.5rem', lineHeight: 1.1, display: 'block' }}>
 								{t.nav.anotherProjectFrom}
 							</Typography>
 							<Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.15 }}>
