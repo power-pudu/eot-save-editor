@@ -105,6 +105,9 @@ function parseSlot(rawBytes: Uint8Array, slotIndex: number): SlotData {
   const playtimeSeconds = view.getUint32(SLOT_OFFSETS.PLAYTIME, true)
   const silverPoints = view.getUint8(SLOT_OFFSETS.SILVER_POINTS)
   const catFood = view.getUint8(SLOT_OFFSETS.CAT_FOOD)
+  const location = view.getUint16(SLOT_OFFSETS.LOCATION, true)
+  const locationX = view.getUint8(SLOT_OFFSETS.LOCATION_X)
+  const locationY = view.getUint8(SLOT_OFFSETS.LOCATION_Y)
   const rawLeader = view.getUint8(SLOT_OFFSETS.PARTY)
 
   // In Chrono Trigger DS, an uninitialized slot contains:
@@ -125,6 +128,9 @@ function parseSlot(rawBytes: Uint8Array, slotIndex: number): SlotData {
   const cleanPlaytimeSeconds = isInitialized ? playtimeSeconds : 0
   const cleanSilverPoints = isInitialized ? silverPoints : 0
   const cleanCatFood = isInitialized ? catFood : 0
+  const cleanLocation = isInitialized ? location : 0
+  const cleanLocationX = isInitialized ? locationX : 0
+  const cleanLocationY = isInitialized ? locationY : 0
   const cleanParty: [number, number, number] = isInitialized
     ? [view.getUint8(SLOT_OFFSETS.PARTY), view.getUint8(SLOT_OFFSETS.PARTY + 1), view.getUint8(SLOT_OFFSETS.PARTY + 2)]
     : [0, 255, 255]
@@ -196,6 +202,9 @@ function parseSlot(rawBytes: Uint8Array, slotIndex: number): SlotData {
     playtimeSeconds: cleanPlaytimeSeconds,
     silverPoints: cleanSilverPoints,
     catFood: cleanCatFood,
+    location: cleanLocation,
+    locationX: cleanLocationX,
+    locationY: cleanLocationY,
     characterNames,
     airshipName,
     leadName,
@@ -328,6 +337,13 @@ function writeSlot(output: Uint8Array, slot: SlotData): void {
     SLOT_OFFSETS.CAT_FOOD,
     clamp(slot.catFood, FIELD_LIMITS.catFood.min, FIELD_LIMITS.catFood.storageMax),
   )
+
+  // Save location (leave facing byte at 0x042C untouched)
+  const clampedLocation = clamp(slot.location, 0, 0xffff)
+  view.setUint16(SLOT_OFFSETS.LOCATION, clampedLocation, true)
+  view.setUint8(SLOT_OFFSETS.LOCATION_X, clamp(slot.locationX, 0, 0xff))
+  view.setUint8(SLOT_OFFSETS.LOCATION_Y, clamp(slot.locationY, 0, 0xff))
+  view.setUint16(SLOT_OFFSETS.LOCATION_COPY, clampedLocation, true)
 
   // Names
   for (let i = 0; i < CHARACTER_COUNT; i += 1) {

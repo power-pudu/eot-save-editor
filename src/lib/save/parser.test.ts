@@ -5,7 +5,9 @@ import {
   crc16Ibm,
 } from './checksum'
 import {
+  FILE_OFFSETS,
   SAVE_MAGIC,
+  SLOT_OFFSETS,
   SLOT_SIZE,
 } from './constants'
 import { createDemoSaveBytes } from './demo'
@@ -111,6 +113,60 @@ describe('parse / serialize round-trip', () => {
     expect(reloadedCrono.maxMp).toBe(99)
     expect(reloadedCrono.power).toBe(99)
     expect(reloadedCrono.speed).toBe(16)
+    expect(reloaded.data.slots[0].isValidChecksum).toBe(true)
+  })
+
+  it('round-trips save location, writes the 0x434 copy, and leaves facing and untouched slots intact', () => {
+    const demo = createDemoSaveBytes()
+    const slot0Offset = FILE_OFFSETS.SLOT_TABLE
+    const slot1Offset = FILE_OFFSETS.SLOT_TABLE + SLOT_SIZE
+    const demoView = new DataView(demo.buffer, demo.byteOffset, demo.byteLength)
+
+    // Seed slot 0 with an initial location and non-zero facing byte at 0x42C, then fix checksum
+    demoView.setUint16(slot0Offset + SLOT_OFFSETS.LOCATION, 0x00d, true)
+    demoView.setUint8(slot0Offset + SLOT_OFFSETS.LOCATION_X, 4)
+    demoView.setUint8(slot0Offset + SLOT_OFFSETS.LOCATION_Y, 24)
+    demoView.setUint8(slot0Offset + 0x042c, 3) // facing byte
+    demoView.setUint16(slot0Offset + SLOT_OFFSETS.LOCATION_COPY, 0x00d, true)
+    demoView.setUint32(
+      slot0Offset + SLOT_OFFSETS.CHECKSUM,
+      calculateSlotChecksum(demo.subarray(slot0Offset, slot0Offset + SLOT_SIZE)),
+      true,
+    )
+
+    // Untouched slot must serialize byte-identical
+    const untouchedDoc = parseSave(demo)
+    expect(untouchedDoc.data.slots[0].location).toBe(0x00d)
+    expect(untouchedDoc.data.slots[0].locationX).toBe(4)
+    expect(untouchedDoc.data.slots[0].locationY).toBe(24)
+    expect(serializeSave(untouchedDoc)).toEqual(demo)
+    expect(countChangedBytes(untouchedDoc)).toBe(0)
+
+    // Edit slot 0 to Algetty (0x17C, 42, 42)
+    untouchedDoc.data.slots[0].location = 0x17c
+    untouchedDoc.data.slots[0].locationX = 42
+    untouchedDoc.data.slots[0].locationY = 42
+
+    const output = serializeSave(untouchedDoc)
+    const outView = new DataView(output.buffer, output.byteOffset, output.byteLength)
+
+    // Verify 0x428, 0x42A, 0x42B, and second copy at 0x434
+    expect(outView.getUint16(slot0Offset + SLOT_OFFSETS.LOCATION, true)).toBe(0x17c)
+    expect(outView.getUint8(slot0Offset + SLOT_OFFSETS.LOCATION_X)).toBe(42)
+    expect(outView.getUint8(slot0Offset + SLOT_OFFSETS.LOCATION_Y)).toBe(42)
+    expect(outView.getUint16(slot0Offset + SLOT_OFFSETS.LOCATION_COPY, true)).toBe(0x17c)
+
+    // Facing byte at 0x42C must remain untouched
+    expect(outView.getUint8(slot0Offset + 0x042c)).toBe(3)
+
+    // Untouched slots (1 and 2) must remain byte-identical
+    expect(output.subarray(slot1Offset)).toEqual(demo.subarray(slot1Offset))
+
+    // Reload and verify round-trip and checksum
+    const reloaded = parseSave(output)
+    expect(reloaded.data.slots[0].location).toBe(0x17c)
+    expect(reloaded.data.slots[0].locationX).toBe(42)
+    expect(reloaded.data.slots[0].locationY).toBe(42)
     expect(reloaded.data.slots[0].isValidChecksum).toBe(true)
   })
 

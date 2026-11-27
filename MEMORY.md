@@ -120,6 +120,11 @@
 - `0x0000`: 32-bit Additive Checksum (little-endian).
 - `0x027A`: 1-byte Norstein Bekkler's Tent Silver Points (`0 - 255`).
 - `0x0287`: 1-byte Millennial Fair Cat Food quantity in pounds (`0 - 255`).
+- `0x0428`: 2-byte little-endian save location ID.
+- `0x042A`: 1-byte party tile X coordinate.
+- `0x042B`: 1-byte party tile Y coordinate.
+- `0x042C`: 1-byte party facing direction (left untouched on write).
+- `0x0434`: 2-byte little-endian second copy of save location ID (must match `0x0428`).
 - `0x045C`: Character battle data (7 characters × `0x60` bytes each, starting with Crono ID 0 at `0x045C`, Frog ID 4 at `0x05DC` / file offset `0x0604`).
 - `0x06FC`: Weapons inventory (`111` slots × 4 bytes).
 - `0x08B8`: Armor inventory (`50` slots × 4 bytes).
@@ -190,6 +195,7 @@ src/
     ├── fileHandler.ts          # File I/O, blob generation, DeSmuME footer preservation
     ├── itemNames.ts            # All 347 game items across 6 categories
     ├── parser.ts               # Binary parser & serializer with checksum recalculation
+    ├── saveLocations.ts        # All 63 in-game save point locations with official EN/FR/JA names
     └── types.ts                # TypeScript interfaces for SaveDocument, SlotData, etc.
 ```
 

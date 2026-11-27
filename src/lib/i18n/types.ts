@@ -67,6 +67,7 @@ export interface Translations {
     partyLeader: string
     gold: string
     playtime: string
+    location: string
     party: string
     editingSlot: string
     selectSlot: string
@@ -181,6 +182,15 @@ export interface Translations {
     playtimeHours: string
     playtimeMinutes: string
     saveCountLabel: string
+    locationTitle: string
+    locationSubtitle: string
+    locationCurrentLabel: string
+    locationPickerLabel: string
+    locationPickerPlaceholder: string
+    locationOther: string
+    locationNoEra: string
+    locationHelpText: string
+    locationSoftlockWarning: string
   }
   // Legal Footer
   footer: {

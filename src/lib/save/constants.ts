@@ -45,6 +45,14 @@ export const SLOT_OFFSETS = {
   SILVER_POINTS: 0x027a,
   /** 1 byte: cat food. */
   CAT_FOOD: 0x0287,
+  /** 2-byte little-endian location id. */
+  LOCATION: 0x0428,
+  /** 1-byte party tile X coordinate. */
+  LOCATION_X: 0x042a,
+  /** 1-byte party tile Y coordinate. */
+  LOCATION_Y: 0x042b,
+  /** 2-byte little-endian second copy of the location id (must match LOCATION). */
+  LOCATION_COPY: 0x0434,
   /** 7 characters, 0x60 bytes each (starts at slot offset 0x045C). */
   CHARACTERS_DATA: 0x045c,
   /** Inventory category start offsets */

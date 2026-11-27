@@ -59,6 +59,7 @@ Every item from the Nintendo DS release is cataloged and editable:
 - **Fine Quantity Adjustments**: Quick -1/+1 steppers, direct numeric input, or quick "Set to 99" buttons.
 
 ### Mini-Games & Story Entities
+- **Save Location**: Move your save slot to any of the 63 save points across all eras (including DS-only Lost Sanctum, Dimensional Vortex, and Arena of the Ages rooms).
 - **Millennial Fair**: Adjust Silver Points for Norstein Bekkler's tent mini-games.
 - **Cat Breeding**: Modify Crono's house Cat Food supply.
 - **Story Entity Names**: Rename the Epoch time machine (*Wings of Time*) and Princess Nadia (*Marle's royal title*).

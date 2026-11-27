@@ -14,10 +14,16 @@ import GroupRoundedIcon from '@mui/icons-material/GroupRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
+import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded'
 import { CharacterPortrait } from './CharacterPortrait'
-import type { SlotData } from '@/lib/save'
-import { CHARACTER_LABELS } from '@/lib/save'
-import { useI18n } from '@/lib/i18n'
+import { CHARACTER_LABELS, SAVE_LOCATIONS, type LocalizedName, type SlotData } from '@/lib/save'
+import { useI18n, type Locale } from '@/lib/i18n'
+
+function getGameName(name: LocalizedName, locale: Locale): string {
+  if (locale === 'fr') return name.fr
+  if (locale === 'ja') return name.ja
+  return name.en
+}
 
 interface SlotSelectDialogProps {
   open: boolean
@@ -46,7 +52,7 @@ export function SlotSelectDialog({
   onClose,
   canDismiss = true,
 }: SlotSelectDialogProps) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   return (
     <Dialog
@@ -84,6 +90,16 @@ export function SlotSelectDialog({
             const partyNames = slot.party
               .filter((id) => id >= 0 && id < 7)
               .map((id) => slot.characterNames[id] || CHARACTER_LABELS[id])
+
+            const matchedLocation = slot.isInitialized
+              ? SAVE_LOCATIONS.find(
+                  (entry) =>
+                    entry.location === slot.location &&
+                    entry.x === slot.locationX &&
+                    entry.y === slot.locationY,
+                ) ?? null
+              : null
+            const matchedEra = matchedLocation ? getGameName(matchedLocation.era, locale) : ''
 
             return (
               <Grid size={{ xs: 12, md: 4 }} key={idx}>
@@ -234,6 +250,42 @@ export function SlotSelectDialog({
                         >
                           {slot.isInitialized ? `${hours}h ${minutes}m` : '—'}
                         </Typography>
+                      </Box>
+
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary', flexShrink: 0 }}>
+                          <PlaceRoundedIcon sx={{ fontSize: 18, color: slot.isInitialized ? 'primary.main' : 'text.disabled' }} />
+                          <Typography variant="body2">{t.slotDialog.location}</Typography>
+                        </Box>
+                        {slot.isInitialized ? (
+                          <Box sx={{ textAlign: 'right', minWidth: 0 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                lineHeight: 1.3,
+                                wordBreak: 'break-word',
+                              }}
+                            >
+                              {matchedLocation
+                                ? getGameName(matchedLocation.area, locale)
+                                : t.misc.locationOther}
+                            </Typography>
+                            {matchedLocation && matchedEra && (
+                              <Typography
+                                variant="caption"
+                                sx={{ color: 'text.secondary', display: 'block', lineHeight: 1.2 }}
+                              >
+                                {matchedEra}
+                              </Typography>
+                            )}
+                          </Box>
+                        ) : (
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            —
+                          </Typography>
+                        )}
                       </Box>
 
                       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>

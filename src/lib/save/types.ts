@@ -51,6 +51,11 @@ export interface SlotData {
   silverPoints: number
   catFood: number
 
+  // Save location
+  location: number
+  locationX: number
+  locationY: number
+
   // Names (decoded to standard representation)
   characterNames: string[] // 7 names
   airshipName: string // Epoch

@@ -1,7 +1,7 @@
 {
   "name": "ctds-save-editor",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "100% client-side Chrono Trigger DS save file editor",
   "scripts": {
