@@ -10,7 +10,7 @@ export const ja: Translations = {
     misc: 'ミニゲーム',
     appTitle: '時の卵 (Egg of Time)',
     appSubtitle: 'クロノ・トリガー DS セーブエディター',
-    version: 'v0.5',
+    version: 'v0.6',
     anotherProjectFrom: '制作・提供：',
   },
   topBar: {

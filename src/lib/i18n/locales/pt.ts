@@ -10,7 +10,7 @@ export const pt: Translations = {
     misc: 'Minijogos',
     appTitle: 'Egg of Time',
     appSubtitle: 'Editor Chrono Trigger DS',
-    version: 'v0.5',
+    version: 'v0.6',
     anotherProjectFrom: 'Outro projeto de',
   },
   topBar: {

@@ -10,7 +10,7 @@ export const zh: Translations = {
     misc: '小游戏',
     appTitle: '时之卵 (Egg of Time)',
     appSubtitle: '时空之轮 DS 存档修改器',
-    version: 'v0.5',
+    version: 'v0.6',
     anotherProjectFrom: '开发制作：',
   },
   topBar: {
