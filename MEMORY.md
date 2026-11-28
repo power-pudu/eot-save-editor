@@ -118,8 +118,9 @@
 
 ### Key Slot Offsets (Relative to `slotBase`)
 - `0x0000`: 32-bit Additive Checksum (little-endian).
-- `0x027A`: 1-byte Norstein Bekkler's Tent Silver Points (`0 - 255`).
-- `0x0287`: 1-byte Millennial Fair Cat Food quantity in pounds (`0 - 255`).
+- `0x0228 .. 0x0427`: Story & quest flag bank (`0x200` bytes, SNES `$7F0000-$7F01FF`). Offset `0x0228` itself is the storyline counter (do not edit as bit flags); individual story/quest flags occupy bits in `0x0229 .. 0x0427`.
+- `0x027A`: 1-byte Norstein Bekkler's Tent Silver Points (`0 - 255`). (Lies inside the flag bank range; written after `flagBank` during serialization.)
+- `0x0287`: 1-byte Millennial Fair Cat Food quantity in pounds (`0 - 255`). (Lies inside the flag bank range; written after `flagBank` during serialization.)
 - `0x0428`: 2-byte little-endian save location ID.
 - `0x042A`: 1-byte party tile X coordinate.
 - `0x042B`: 1-byte party tile Y coordinate.
@@ -184,9 +185,11 @@ src/
 │   ├── FileDropzone.tsx        # Drag & drop upload area with demo save loader
 │   ├── InventoryView.tsx       # Paginated (36/page) search & editor for 347 items
 │   ├── LegalFooter.tsx         # Legal disclaimer, trademark notice, and modal
-│   ├── MiscView.tsx            # Silver points, Cat food, Epoch name, playtime
+│   ├── MiscView.tsx            # Millennial Fair mini-games (Silver points, Cat food)
 │   ├── Sidebar.tsx             # Responsive drawer (width: 270px) with Power Pudu branding
-│   └── SlotSelectDialog.tsx    # First-screen modal to choose from Slots 1, 2, or 3
+│   ├── SlotSelectDialog.tsx    # First-screen modal to choose from Slots 1, 2, or 3
+│   ├── StoryFlagsView.tsx      # Searchable, collapsible story & quest flags editor (389 flags)
+│   └── StoryView.tsx           # Save location, Story entity names, Playtime/saves, and StoryFlagsView
 └── lib/save/
     ├── checksum.ts             # 32-bit slot sum implementation
     ├── constants.ts            # Offsets, strides, and memory layouts
@@ -195,6 +198,7 @@ src/
     ├── fileHandler.ts          # File I/O, blob generation, DeSmuME footer preservation
     ├── itemNames.ts            # All 347 game items across 6 categories
     ├── parser.ts               # Binary parser & serializer with checksum recalculation
+    ├── saveFlags.ts            # 389 story & quest flags with official EN/FR area groups
     ├── saveLocations.ts        # All 63 in-game save point locations with official EN/FR/JA names
     └── types.ts                # TypeScript interfaces for SaveDocument, SlotData, etc.
 ```

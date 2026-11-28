@@ -56,6 +56,9 @@ export interface SlotData {
   locationX: number
   locationY: number
 
+  // Story & quest flag bank (0x200 bytes: slot offsets 0x0228..0x0427)
+  flagBank: Uint8Array
+
   // Names (decoded to standard representation)
   characterNames: string[] // 7 names
   airshipName: string // Epoch

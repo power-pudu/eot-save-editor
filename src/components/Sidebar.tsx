@@ -12,13 +12,14 @@ import Chip from '@mui/material/Chip'
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
 import GroupRoundedIcon from '@mui/icons-material/GroupRounded'
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded'
+import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded'
 import AttractionsRoundedIcon from '@mui/icons-material/AttractionsRounded'
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded'
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded'
 import { LanguageSelector } from './LanguageSelector'
 import { useI18n } from '@/lib/i18n'
 
-export type NavTab = 'dashboard' | 'characters' | 'inventory' | 'misc'
+export type NavTab = 'dashboard' | 'characters' | 'inventory' | 'story' | 'misc'
 
 interface SidebarProps {
 	activeTab: NavTab
@@ -64,6 +65,12 @@ export function Sidebar({
 			label: t.nav.inventory,
 			sublabel: t.inventory.catAll,
 			icon: <Inventory2RoundedIcon sx={{ fontSize: 22 }} />,
+		},
+		{
+			id: 'story',
+			label: t.nav.story,
+			sublabel: t.nav.storySubtitle,
+			icon: <AutoStoriesRoundedIcon sx={{ fontSize: 22 }} />,
 		},
 		{
 			id: 'misc',

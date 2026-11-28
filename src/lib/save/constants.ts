@@ -41,6 +41,10 @@ export const FILE_OFFSETS = {
 /** Offsets relative to the start of one 0x2800-byte save slot. */
 export const SLOT_OFFSETS = {
   CHECKSUM: 0x0000,
+  /** Start of the 0x200-byte story/quest flag bank ($7F0000-$7F01FF). Offset 0x0228 itself is the storyline counter. */
+  FLAG_BANK: 0x0228,
+  /** Byte length of the story/quest flag bank (0x0228..0x0427). */
+  FLAG_BANK_SIZE: 0x200,
   /** 1 byte: silver points. */
   SILVER_POINTS: 0x027a,
   /** 1 byte: cat food. */

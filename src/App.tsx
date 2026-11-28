@@ -38,6 +38,9 @@ const CharactersView = lazy(() =>
 const InventoryView = lazy(() =>
   import('@/components/InventoryView').then((m) => ({ default: m.InventoryView })),
 )
+const StoryView = lazy(() =>
+  import('@/components/StoryView').then((m) => ({ default: m.StoryView })),
+)
 const MiscView = lazy(() =>
   import('@/components/MiscView').then((m) => ({ default: m.MiscView })),
 )
@@ -481,6 +484,9 @@ export default function App() {
                     )}
                     {activeTab === 'inventory' && (
                       <InventoryView slot={activeSlot} onPatchSlot={patchActiveSlot} />
+                    )}
+                    {activeTab === 'story' && (
+                      <StoryView slot={activeSlot} onPatchSlot={patchActiveSlot} />
                     )}
                     {activeTab === 'misc' && (
                       <MiscView slot={activeSlot} onPatchSlot={patchActiveSlot} />

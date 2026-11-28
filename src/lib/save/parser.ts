@@ -16,6 +16,7 @@ import {
 import { decodeName, decodeShiftJis, encodeName } from './encoding'
 import { getExpToNext } from './expTable'
 import { ITEM_CATEGORIES } from './itemNames'
+import type { SaveFlag } from './saveFlags'
 import type {
   CharacterStats,
   InventoryItem,
@@ -131,6 +132,12 @@ function parseSlot(rawBytes: Uint8Array, slotIndex: number): SlotData {
   const cleanLocation = isInitialized ? location : 0
   const cleanLocationX = isInitialized ? locationX : 0
   const cleanLocationY = isInitialized ? locationY : 0
+  const flagBank = isInitialized
+    ? rawBytes.slice(
+        slotOffset + SLOT_OFFSETS.FLAG_BANK,
+        slotOffset + SLOT_OFFSETS.FLAG_BANK + SLOT_OFFSETS.FLAG_BANK_SIZE,
+      )
+    : new Uint8Array(SLOT_OFFSETS.FLAG_BANK_SIZE)
   const cleanParty: [number, number, number] = isInitialized
     ? [view.getUint8(SLOT_OFFSETS.PARTY), view.getUint8(SLOT_OFFSETS.PARTY + 1), view.getUint8(SLOT_OFFSETS.PARTY + 2)]
     : [0, 255, 255]
@@ -205,6 +212,7 @@ function parseSlot(rawBytes: Uint8Array, slotIndex: number): SlotData {
     location: cleanLocation,
     locationX: cleanLocationX,
     locationY: cleanLocationY,
+    flagBank,
     characterNames,
     airshipName,
     leadName,
@@ -306,6 +314,11 @@ function writeFixedName(output: Uint8Array, offset: number, name: string): void 
 function writeSlot(output: Uint8Array, slot: SlotData): void {
   const slotOffset = FILE_OFFSETS.SLOT_TABLE + slot.index * SLOT_SIZE
   const view = new DataView(output.buffer, output.byteOffset + slotOffset, SLOT_SIZE)
+
+  // Story & quest flag bank (0x0228..0x0427), written before silverPoints (0x027A) and catFood (0x0287)
+  if (slot.flagBank.length === SLOT_OFFSETS.FLAG_BANK_SIZE) {
+    output.set(slot.flagBank, slotOffset + SLOT_OFFSETS.FLAG_BANK)
+  }
 
   // Progress
   view.setUint32(
@@ -429,12 +442,41 @@ export function countChangedBytes(document: SaveDocument): number {
   return changed
 }
 
+export function getFlag(
+  slot: SlotData,
+  flag: Pick<SaveFlag, 'offset' | 'bit'>,
+): boolean {
+  const rel = flag.offset - SLOT_OFFSETS.FLAG_BANK
+  if (rel < 1 || rel >= SLOT_OFFSETS.FLAG_BANK_SIZE) return false
+  return (slot.flagBank[rel] & flag.bit) !== 0
+}
+
+export function setFlag(
+  slot: SlotData,
+  flag: Pick<SaveFlag, 'offset' | 'bit'>,
+  on: boolean,
+): SlotData {
+  const rel = flag.offset - SLOT_OFFSETS.FLAG_BANK
+  if (rel < 1 || rel >= SLOT_OFFSETS.FLAG_BANK_SIZE) return slot
+  const nextBank = new Uint8Array(slot.flagBank)
+  if (on) {
+    nextBank[rel] |= flag.bit
+  } else {
+    nextBank[rel] &= ~flag.bit
+  }
+  return {
+    ...slot,
+    flagBank: nextBank,
+  }
+}
+
 export function cloneSaveData(data: SaveData): SaveData {
   return {
     headerTitle: data.headerTitle,
     activeSlotIndex: data.activeSlotIndex,
     slots: data.slots.map((slot) => ({
       ...slot,
+      flagBank: new Uint8Array(slot.flagBank),
       characterNames: [...slot.characterNames],
       party: [...slot.party] as [number, number, number],
       characters: slot.characters.map((c) => ({ ...c })),

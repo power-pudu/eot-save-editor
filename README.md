@@ -58,6 +58,10 @@ Every item from the Nintendo DS release is cataloged and editable:
 - **Live Search & Filters**: Filter by item name or category, or toggle "Show Owned Only".
 - **Fine Quantity Adjustments**: Quick -1/+1 steppers, direct numeric input, or quick "Set to 99" buttons.
 
+### Story & Quest Flags (389 Flags)
+- **Verified Quest Flags**: Quickly toggle verified side-quest completion flags (Fiona's Forest, Rainbow Shell, Sun Stone, Northern Ruins, Ozzie's Fort, Geno Dome, Lucca's mother, and Millennial Fair lunch) with a "Checked flags only" filter on by default.
+- **Full Flag Bank**: Search and toggle 389 story and quest flags grouped by area, with bit-level editing that preserves unrelated flags sharing the same byte.
+
 ### Mini-Games & Story Entities
 - **Save Location**: Move your save slot to any of the 63 save points across all eras (including DS-only Lost Sanctum, Dimensional Vortex, and Arena of the Ages rooms).
 - **Millennial Fair**: Adjust Silver Points for Norstein Bekkler's tent mini-games.
@@ -109,4 +113,5 @@ Egg of Time Save Editor is free software licensed under the **GNU General Public
 
 - Built with [React](https://react.dev), [Vite](https://vitejs.dev), and [Material UI](https://mui.com)
 - UI layout and theme inspired by [SaaSable UI](https://github.com/phoenixcoded/saasable-ui) by Phoenixcoded
+- Story and quest flag documentation based on SNES research from [ctrando](https://github.com/Pseudoarc/ctrando) by Pseudoarc, matched and verified against the Nintendo DS event scripts
 - Reverse-engineered memory layouts and offsets documented in [MEMORY.md](MEMORY.md)

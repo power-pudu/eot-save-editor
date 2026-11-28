@@ -16,10 +16,13 @@ import { CT_EXP_TO_NEXT } from './expTable'
 import { getItemCategory, getItemName } from './itemNames'
 import {
   countChangedBytes,
+  getFlag,
   parseSave,
   SaveParseError,
   serializeSave,
+  setFlag,
 } from './parser'
+import { SAVE_FLAGS } from './saveFlags'
 
 describe('parse / serialize round-trip', () => {
   it('parses the generated demo save without altering it', () => {
@@ -168,6 +171,62 @@ describe('parse / serialize round-trip', () => {
     expect(reloaded.data.slots[0].locationX).toBe(42)
     expect(reloaded.data.slots[0].locationY).toBe(42)
     expect(reloaded.data.slots[0].isValidChecksum).toBe(true)
+  })
+
+  it('round-trips story flags, preserves other 7 bits, clears cleanly, and keeps untouched slots byte-identical', () => {
+    const demo = createDemoSaveBytes()
+    const slot0Offset = FILE_OFFSETS.SLOT_TABLE
+    const slot1Offset = FILE_OFFSETS.SLOT_TABLE + SLOT_SIZE
+    const demoView = new DataView(demo.buffer, demo.byteOffset, demo.byteLength)
+
+    // Fiona's Shrine quest complete is 0x3C6 bit 0x02; seed 0x3C6 with 0xA5 (1010_0101: bit 0x02 is off, others mixed)
+    const testFlag = SAVE_FLAGS.find((f) => f.offset === 0x3c6 && f.bit === 0x02)!
+    expect(testFlag).toBeDefined()
+
+    demo[slot0Offset + 0x3c6] = 0xa5
+    demoView.setUint32(
+      slot0Offset + SLOT_OFFSETS.CHECKSUM,
+      calculateSlotChecksum(demo.subarray(slot0Offset, slot0Offset + SLOT_SIZE)),
+      true,
+    )
+
+    // Untouched slot must serialize byte-identical
+    const doc = parseSave(demo)
+    expect(getFlag(doc.data.slots[0], testFlag)).toBe(false)
+    expect(serializeSave(doc)).toEqual(demo)
+    expect(countChangedBytes(doc)).toBe(0)
+
+    // Setting bit 0x02 changes 0xA5 -> 0xA7, leaving all other 7 bits unchanged
+    doc.data.slots[0] = setFlag(doc.data.slots[0], testFlag, true)
+    expect(getFlag(doc.data.slots[0], testFlag)).toBe(true)
+
+    const outputOn = serializeSave(doc)
+    expect(outputOn[slot0Offset + 0x3c6]).toBe(0xa7)
+    expect(outputOn.subarray(slot1Offset)).toEqual(demo.subarray(slot1Offset))
+
+    const reloadedOn = parseSave(outputOn)
+    expect(getFlag(reloadedOn.data.slots[0], testFlag)).toBe(true)
+    expect(reloadedOn.data.slots[0].isValidChecksum).toBe(true)
+
+    // Clearing bit 0x02 returns 0xA7 -> 0xA5, matching original demo bytes
+    reloadedOn.data.slots[0] = setFlag(reloadedOn.data.slots[0], testFlag, false)
+    expect(getFlag(reloadedOn.data.slots[0], testFlag)).toBe(false)
+
+    const outputOff = serializeSave(reloadedOn)
+    expect(outputOff[slot0Offset + 0x3c6]).toBe(0xa5)
+    expect(outputOff).toEqual(demo)
+  })
+
+  it('validates every SAVE_FLAGS entry has offset in 0x229..0x427 and exactly one bit set', () => {
+    expect(SAVE_FLAGS.length).toBe(389)
+    for (const flag of SAVE_FLAGS) {
+      expect(flag.offset).toBeGreaterThanOrEqual(0x229)
+      expect(flag.offset).toBeLessThanOrEqual(0x427)
+      // Exactly one bit set in 0x01..0x80
+      expect(flag.bit).toBeGreaterThanOrEqual(0x01)
+      expect(flag.bit).toBeLessThanOrEqual(0x80)
+      expect(flag.bit & (flag.bit - 1)).toBe(0)
+    }
   })
 
   it('rejects invalid sizes with a clear error', () => {

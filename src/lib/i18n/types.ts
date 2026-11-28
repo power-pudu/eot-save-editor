@@ -22,6 +22,8 @@ export interface Translations {
     dashboard: string
     characters: string
     inventory: string
+    story: string
+    storySubtitle: string
     misc: string
     appTitle: string
     appSubtitle: string
@@ -191,6 +193,17 @@ export interface Translations {
     locationNoEra: string
     locationHelpText: string
     locationSoftlockWarning: string
+  }
+  // Story Flags View
+  flags: {
+    title: string
+    subtitle: string
+    searchPlaceholder: string
+    checkedOnly: string
+    checkedBadge: string
+    helpText: string
+    noFlagsFound: string
+    flagsCount: string
   }
   // Legal Footer
   footer: {
